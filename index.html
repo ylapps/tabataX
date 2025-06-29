@@ -6,9 +6,10 @@
   <title>Tabata X — Open Workout</title>
   <style>
     :root {
-      --brand: #16a34a;
-      --brand-dark: #0e7a36;
-      --accent: #3b82f6;
+      /* Primary (orange) and secondary (blue outline) palettes */
+      --primary: #f97316;        /* openBtn background */
+      --primary-dark: #ea580c;   /* hover state */
+      --accent: #3b82f6;         /* outline + text for downloadBtn */
     }
 
     * {
@@ -36,6 +37,7 @@
     }
 
     button {
+      width: 260px;              /* equal width for both buttons */
       padding: 1rem 2.25rem;
       font-size: 1.125rem;
       font-weight: 600;
@@ -44,9 +46,9 @@
       transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
     }
 
-    /* Primary button */
+    /* Primary button (orange) */
     #openBtn {
-      background: var(--brand);
+      background: var(--primary);
       color: #fff;
       border: none;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -54,10 +56,10 @@
 
     #openBtn:hover {
       transform: translateY(-2px);
-      background: var(--brand-dark);
+      background: var(--primary-dark);
     }
 
-    /* Secondary button (no background) */
+    /* Secondary button (blue outline) */
     #downloadBtn {
       background: transparent;
       color: var(--accent);
@@ -73,6 +75,7 @@
     #info {
       font-size: 1rem;
       color: #475569;
+      max-width: 90vw;
     }
   </style>
 </head>
@@ -87,13 +90,18 @@
     (() => {
       const params = new URLSearchParams(window.location.search);
       const workoutId = params.get("workoutId");
+      const workoutName = params.get("name");
 
       const info = document.getElementById("info");
-      info.textContent = workoutId
-        ? `Workout ID: ${workoutId}`
-        : "No workoutId specified in the URL.";
+      if (workoutName) {
+        info.textContent = workoutName;
+      } else if (workoutId) {
+        info.textContent = `Workout ID: ${workoutId}`;
+      } else {
+        info.textContent = "No workout specified in the URL.";
+      }
 
-      if (!workoutId) return;
+      if (!workoutId) return; // Need ID for deep link
 
       const deeplink = `tabatax://workout?id=${encodeURIComponent(workoutId)}`;
       const appStoreURL =
