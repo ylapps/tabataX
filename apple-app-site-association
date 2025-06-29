@@ -1,0 +1,19 @@
+"applinks": {
+  "details": [
+    {
+      "appIDs": [ "7AGKTE77BB.com.yevhenii.lytvynenko.tabatax" ],
+      "components": [
+        {
+          "/": "/workout/*",
+          "?": { "id": "????" },
+          "comment": "Workout with ID"
+        },
+        {
+          "/": "/TabataX/*",
+          "?": { "id": "????" },
+          "comment": "Workout with ID"
+        },
+      ]
+    }
+  ]
+}
