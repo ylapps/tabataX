@@ -1,1 +1,82 @@
-TabataX Page
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Open Workout in App</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100dvh;
+      margin: 0;
+      gap: 1.5rem;
+      text-align: center;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    #openBtn {
+      padding: 1rem 2.25rem;
+      font-size: 1.125rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 0.5rem;
+      background: #16a34a;
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: transform 0.15s ease;
+    }
+
+    #openBtn:hover {
+      transform: translateY(-2px);
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Open Workout in App</h1>
+  <p id="info"></p>
+  <button id="openBtn" class="hidden">Open in App</button>
+
+  <script>
+    (function () {
+      // Read the workoutId from the URL query parameters, e.g. ?workoutId=1234
+      const params = new URLSearchParams(window.location.search);
+      const workoutId = params.get("workoutId");
+
+      const btn = document.getElementById("openBtn");
+      const info = document.getElementById("info");
+
+      if (workoutId) {
+        const deeplink = `tabatax://workout?id=${encodeURIComponent(workoutId)}`;
+
+        // Show some context to the user
+        info.textContent = `Workout ID: ${workoutId}`;
+
+        // Update the button to open the deep link
+        btn.addEventListener("click", () => {
+          // Navigate to the deep link on click
+          window.location.href = deeplink;
+        });
+
+        // Reveal the button
+        btn.classList.remove("hidden");
+
+        // (Optional) Uncomment to auto‑redirect after a short delay
+        // setTimeout(() => (window.location.href = deeplink), 1500);
+      } else {
+        info.textContent = "No workoutId specified in the URL.";
+      }
+    })();
+  </script>
+</body>
+</html>
+
