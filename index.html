@@ -8,10 +8,13 @@
     :root {
       --brand: #16a34a;
       --brand-dark: #0e7a36;
+      --accent: #3b82f6;
     }
+
     * {
       box-sizing: border-box;
     }
+
     body {
       margin: 0;
       height: 100dvh;
@@ -26,53 +29,59 @@
       gap: 1rem;
       padding: 1rem;
     }
+
     h1 {
       font-size: 1.5rem;
       margin: 0;
     }
+
     button {
       padding: 1rem 2.25rem;
       font-size: 1.125rem;
       font-weight: 600;
-      border: none;
       border-radius: 0.5rem;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: transform 0.15s ease, background 0.15s ease;
+      transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
     }
+
+    /* Primary button */
     #openBtn {
       background: var(--brand);
       color: #fff;
+      border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
+
     #openBtn:hover {
       transform: translateY(-2px);
       background: var(--brand-dark);
     }
+
+    /* Secondary button (no background) */
     #downloadBtn {
-      background: #3b82f6;
-      color: #fff;
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+      box-shadow: none;
     }
+
     #downloadBtn:hover {
       transform: translateY(-2px);
-      background: #2563eb;
+      background: rgba(59, 130, 246, 0.1);
     }
-    .hidden {
-      display: none;
-    }
-    footer {
-      font-size: 0.875rem;
+
+    #info {
+      font-size: 1rem;
       color: #475569;
     }
   </style>
 </head>
 <body>
   <h1>Tabata X</h1>
-  <p id="info">Loading…</p>
+  <p id="info"></p>
 
-  <button id="openBtn" class="hidden">Open in App</button>
-  <button id="downloadBtn" class="hidden">Download App from App Store</button>
-
-  <footer>(The page will try to detect if Tabata X is installed.)</footer>
+  <button id="openBtn">Open in App</button>
+  <button id="downloadBtn">Download from App Store</button>
 
   <script>
     (() => {
@@ -80,10 +89,6 @@
       const workoutId = params.get("workoutId");
 
       const info = document.getElementById("info");
-      const openBtn = document.getElementById("openBtn");
-      const downloadBtn = document.getElementById("downloadBtn");
-
-      // Update info text
       info.textContent = workoutId
         ? `Workout ID: ${workoutId}`
         : "No workoutId specified in the URL.";
@@ -94,58 +99,11 @@
       const appStoreURL =
         "https://apps.apple.com/ua/app/meitu-photo-video-editor/id416048305?l=uk";
 
-      /**
-       * Best‑effort detection:
-       * 1. Create an invisible iframe pointing to the custom scheme.
-       * 2. If the page becomes hidden within timeout → app opened → show “Open in App”.
-       *    (We can optionally auto‑open.)
-       * 3. If still visible after timeout → assume not installed → show “Download”.
-       *
-       * ⚠️ Not 100 % reliable on every browser / iOS version, but widely used.
-       */
-      const TRY_DELAY = 1200; // ms
-      let didHide = false;
-
-      const detectInstallation = () => {
-        // (A) Watch for “hidden” (page lost visibility)
-        const visHandler = () => {
-          if (document.hidden) {
-            didHide = true;
-          }
-        };
-        document.addEventListener("visibilitychange", visHandler);
-
-        // (B) Start attempt to open the app via an iframe (no user gesture required)
-        const iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        iframe.src = deeplink;
-        document.body.appendChild(iframe);
-
-        // (C) After timeout, decide what to show
-        setTimeout(() => {
-          document.removeEventListener("visibilitychange", visHandler);
-          iframe.remove();
-
-          if (didHide) {
-            // App seems installed → show “Open in App”
-            openBtn.classList.remove("hidden");
-          } else {
-            // App not installed → show “Download”
-            downloadBtn.classList.remove("hidden");
-          }
-        }, TRY_DELAY);
-      };
-
-      // Start detection once DOM ready
-      detectInstallation();
-
-      // (1) OPEN IN APP (when detected)
-      openBtn.addEventListener("click", () => {
+      document.getElementById("openBtn").addEventListener("click", () => {
         window.location.href = deeplink;
       });
 
-      // (2) DOWNLOAD APP (fallback)
-      downloadBtn.addEventListener("click", () => {
+      document.getElementById("downloadBtn").addEventListener("click", () => {
         window.location.href = appStoreURL;
       });
     })();
