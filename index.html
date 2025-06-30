@@ -5,12 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Tabata X — Open Workout</title>
 
-  <!--
-    📣 Social preview (Open Graph / Twitter Card)
-    Note: Messengers fetch these tags server‑side and do NOT execute JavaScript,
-    so the preview will be generic (not per‑workout) on GitHub Pages.
-    For dynamic previews you’d need server‑side rendering or pre‑generated pages.
-  -->
+  <!-- Social preview (static, generic) -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="Tabata X Workout" />
   <meta property="og:description" content="Open this workout in the Tabata X fitness timer app." />
@@ -24,15 +19,12 @@
 
   <style>
     :root {
-      /* Primary (orange) and secondary (blue outline) palettes */
-      --primary: #f97316;        /* openBtn background */
-      --primary-dark: #ea580c;   /* hover state */
-      --accent: #3b82f6;         /* outline + text for downloadBtn */
+      --primary: #f97316;       /* openBtn background */
+      --primary-dark: #ea580c;  /* hover state */
+      --accent: #3b82f6;        /* outline + text for downloadBtn */
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -49,14 +41,11 @@
       padding: 1rem;
     }
 
-    h1 {
-      font-size: 1.5rem;
-      margin: 0;
-    }
+    h1 { font-size: 1.5rem; margin: 0; }
 
     button {
-      width: 260px;              /* equal width for both buttons */
-      padding: 1rem 2.25rem;
+      width: 300px;              /* wider buttons */
+      padding: 1rem 24px;        /* horizontal padding 24 */
       font-size: 1.125rem;
       font-weight: 600;
       border-radius: 0.5rem;
@@ -71,20 +60,19 @@
       border: none;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
-
     #openBtn:hover {
       transform: translateY(-2px);
       background: var(--primary-dark);
     }
 
-    /* Secondary button (blue outline) */
+    /* Secondary button (blue outline, smaller text) */
     #downloadBtn {
       background: transparent;
       color: var(--accent);
       border: 2px solid var(--accent);
       box-shadow: none;
+      font-size: 1rem;           /* slightly smaller font */
     }
-
     #downloadBtn:hover {
       transform: translateY(-2px);
       background: rgba(59, 130, 246, 0.1);
@@ -108,13 +96,12 @@
     (() => {
       const params = new URLSearchParams(window.location.search);
       const workoutId = params.get("workoutId");
-      const workoutName = params.get("name");
 
       const info = document.getElementById("info");
-      if (workoutName) {
-        info.textContent = workoutName;
-      } else if (workoutId) {
-        info.textContent = `Workout ID: ${workoutId}`;
+
+      if (workoutId) {
+        // Hide info paragraph when workout exists (no text shown)
+        info.remove();
       } else {
         info.textContent = "No workout specified in the URL.";
       }
@@ -128,7 +115,6 @@
       document.getElementById("openBtn").addEventListener("click", () => {
         window.location.href = deeplink;
       });
-
       document.getElementById("downloadBtn").addEventListener("click", () => {
         window.location.href = appStoreURL;
       });
